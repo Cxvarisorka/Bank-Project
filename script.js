@@ -141,11 +141,13 @@ const createAccount = function(accs){
 const calcDisplayBalance = function(acc){
   let resultBalance = acc.movements.reduce((acc,sum) => acc + sum, 0);
 
+  const balanceWithoutFormat = resultBalance;
+
   const userLanguage = window.navigator.language;
   // Format value to read easy
   resultBalance = new Intl.NumberFormat(userLanguage).format(resultBalance);
 
-  acc.balance = resultBalance;
+  acc.balance = balanceWithoutFormat;
   labelBalance.textContent = `${resultBalance}€`;
 }
 
@@ -315,7 +317,9 @@ btnArr.forEach((btn) => {
 
       inputTransferAmount.value = inputTransferTo.value = '';
 
-      if(receiverAcc && amount > 0 && currentAccount.balance >= amount && receiverAcc.username !== currentAccount.username){
+      // const curAccBalance = currentAccount.balance.filter((cur) => cur != ',')
+
+      if(receiverAcc && amount > 0 && Number(currentAccount.balance) >= amount && receiverAcc.username !== currentAccount.username){
         // Doing The Transfers
         currentAccount.movements.push(-amount);
         receiverAcc.movements.push(amount);
@@ -338,11 +342,14 @@ btnArr.forEach((btn) => {
       const deposit = currentAccount.movements.filter((cur) => cur > 0 && cur > loanAmount * 10 / 100);
 
       if(loanAmount > 0 && currentAccount.movements.some(mov => mov >= loanAmount / 10)){
+
+        currentAccount.movements.push(loanAmount);
+        currentAccount.movementsDate.push(currentDate);
+
         setTimeout(function(){
-          currentAccount.movements.push(loanAmount);
-          currentAccount.movementsDate.push(currentDate);
           updateUI(currentAccount);
         },1500); 
+
       }
     }
     else{

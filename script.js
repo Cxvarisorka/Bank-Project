@@ -417,7 +417,7 @@ btnConfirm.addEventListener('click',function(e){
     createAccount(accounts);
 
     // Alert That succesfully created
-    alert('Account Succesfully Created!');
+    alert(`Account Succesfully Created! \nYour Username Is: ${account.username}\nYour Pin Code Is: ${account.pin}`);
 
     // Display None register page
     containerPopup.style.display = 'none';
